@@ -1,0 +1,60 @@
+
+- name: Download 45 drives repo setup script
+  get_url: 
+    url: https://repo.45drives.com/setup 
+    dest: /tmp/setup
+    mode: 755
+
+- name: Setup 45drives repo
+  expect:
+    command: /tmp/setup
+    responses:
+      "Would you like to use 'focal' packages" : 'y'
+
+- name: Install cockpit filesharing
+  apt: 
+    name: cockpit-file-sharing 
+    state: present
+
+- name: install cockpit identities
+  apt:
+    name: cockpit-identities
+    state: present
+
+- name: add entry in smb.conf "[global]" section for file sharing plugin
+  community.general.ini_file:
+    path: /etc/samba/smb.conf
+    section: global
+    option: include
+    value: registry
+    mode: '0644'
+    backup: yes
+
+- name: install cockpit
+  become: true
+  apt:
+    name:
+    - cockpit
+    - cockpit-file-sharing  
+    state: present
+
+- name: make sure systemd directory exists
+  become: true
+  file: 
+   path: /etc/systemd/system/cockpit.socket.d/
+   state: directory
+
+- name: change default port (conflicts with lms)
+  become: true
+  template:
+    src: templates/listen.conf
+    dest: /etc/systemd/system/cockpit.socket.d/listen.conf
+  register: conf_file
+
+- name: restart cockpit
+  become: true
+  ansible.builtin.systemd_service:
+    daemon_reload: true
+    name: cockpit.socket
+    state: restarted
+  when: conf_file.changed

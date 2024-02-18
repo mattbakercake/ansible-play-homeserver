@@ -1,0 +1,40 @@
+- name: Set up home server
+  hosts: homeserver
+
+  pre_tasks:
+    - import_tasks: tasks/fetchroles.yaml
+
+    - name: mount storage disk partitions
+      become: true
+      ansible.posix.mount:
+        path: /mnt/disk/{{ item }}
+        src: UUID={{ item }}
+        fstype: btrfs
+        opts: noatime
+        state: mounted
+      loop: "{{ storage_partition_uuids }}"
+
+
+  tasks:
+    - name: loop through required roles
+      ansible.builtin.include_role:
+        name: '{{ current_role }}'
+      loop: '{{ required_roles }}'
+      loop_control:
+        loop_var: current_role
+
+    - name: samba
+      ansible.builtin.include_role:
+        name: geerlingguy.samba
+
+    - name: mergerfs
+      ansible.builtin.include_role:
+        name: mergerfs
+    
+    - name: Cockpit
+      ansible.builtin.include_role: 
+        name: cockpit
+
+    - name: Logitech Media Server (LMS)
+      ansible.builtin.include_role: 
+        name: logitechmediaserver

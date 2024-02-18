@@ -1,0 +1,19 @@
+services:
+  logitechmediaserver:
+    container_name: logitechmediaserver
+    image: lmscommunity/logitechmediaserver
+    ports:
+      - "9000:9000"
+      - "9090:9090"
+      - "3483:3483"
+      - "3483:3483/udp"
+    volumes:
+      - "{{ docker_dir }}/logitechmediaserver/config:/config"
+      - "{{ docker_dir }}/logitechmediaserver/music:/music:ro"
+      - "{{ docker_dir }}/logitechmediaserver/playlist:/playlist:ro"
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/etc/timezone:/etc/timezone:ro"
+
+    environment:
+      - HTTP_PORT=9000
+    restart: unless-stopped

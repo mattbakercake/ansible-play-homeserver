@@ -1,0 +1,33 @@
+- name: Copy the compose file
+  become: true
+  template:
+    src: templates/compose.yaml
+    dest: "{{ docker_compose_dir }}/compose.lms.yaml"
+  register: compose_file
+
+- name: check whether music directory exists in storage pool
+  become: true
+  stat:
+    path: /mnt/storage_pool/music
+  register: music_dir
+
+- name: remove local music dir if storage pool directory exists
+  become: true
+  file: 
+    path: "{{ docker_dir }}/logitechmediaserver/music"
+    state: absent 
+  when: music_dir.stat.exists
+
+- name: add symlink to storage pool music directory
+  become: true
+  file: 
+    path: "{{ docker_dir }}/logitechmediaserver/music"
+    src: /mnt/storage_pool/music/flac
+    state: link 
+    force: yes
+  when: music_dir.stat.exists
+
+
+- name: Docker-compose up
+  become: true
+  ansible.builtin.command: "docker compose -f {{ docker_compose_dir }}/compose.lms.yaml up --detach"

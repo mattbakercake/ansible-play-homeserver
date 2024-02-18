@@ -1,0 +1,12 @@
+ansible_become: true
+
+git_url: https://github.com/mattbakercake
+
+required_roles:
+ - ansible-role-install-docker
+
+docker_dir: /usr/local/sbin/docker
+docker_compose_dir: /usr/local/sbin/docker/compose
+
+storage_partition_uuids:
+  - 5ec0f641-1ea1-4c9d-af7f-1a5924780204

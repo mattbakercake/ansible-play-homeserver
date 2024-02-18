@@ -1,0 +1,20 @@
+- name: ensure mergerfs package is installed
+  become: true
+  apt:
+    name:
+    - mergerfs
+    state: present
+
+- name: create mergerfs device unions
+  set_fact:
+    merged_unions: "{{ merged_unions | default() }}{% if merged_unions | default() %}:{% endif %}/mnt/disk/{{ item }}"
+  loop: "{{ storage_partition_uuids }}"
+
+- name: mount mergerfs unions
+  become: true
+  ansible.posix.mount:
+    path: "/mnt/storage_pool"
+    src: "{{ merged_unions }}"
+    opts: allow_other,use_ino,cache.files=off,dropcacheonclose=true,category.create=mfs
+    fstype: fuse.mergerfs
+    state: mounted
