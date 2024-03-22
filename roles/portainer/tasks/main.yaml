@@ -1,0 +1,17 @@
+- name: Copy the compose file
+  become: true
+  template:
+    src: templates/compose.yaml
+    dest: "{{ docker_compose_dir }}/compose.portainer.yaml"
+  register: compose_file
+
+- name: Create the portainer persistent data directory
+  become: true
+  ansible.builtin.file:
+    path: "{{ docker_dir }}/portainer/portainer_data"
+    state: directory
+
+- name: Docker-compose up
+  become: true
+  ansible.builtin.command: "docker compose -f {{ docker_compose_dir }}/compose.portainer.yaml up --detach"
+  when: compose_file.changed

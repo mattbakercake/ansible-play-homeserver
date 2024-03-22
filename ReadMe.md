@@ -9,7 +9,10 @@ play pulls down roles stored on github to local ansible host before execting the
 along with any other roles included in play
 
 * docker
-* cockpit
+* portainer
+* cockpit _[linux server web interface]_
 * samba
-* mergerfs
+* mergerfs _[storage pool jbod]_
 * logitech media server
+* homarr _[server resource webpage]_
+* caddy _[reverse proxy/webserver]_

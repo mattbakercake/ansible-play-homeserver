@@ -31,3 +31,4 @@
 - name: Docker-compose up
   become: true
   ansible.builtin.command: "docker compose -f {{ docker_compose_dir }}/compose.lms.yaml up --detach"
+  when: compose_file.changed

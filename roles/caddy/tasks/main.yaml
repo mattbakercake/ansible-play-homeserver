@@ -1,0 +1,36 @@
+- name: Copy the compose file
+  become: true
+  template:
+    src: templates/compose.yaml
+    dest: "{{ docker_compose_dir }}/compose.caddy.yaml"
+  register: compose_file
+
+- name: Copy the caddyfile
+  become: true
+  template:
+    src: templates/Caddyfile
+    dest: "{{ docker_dir }}/caddy/Caddyfile"
+  register: caddyfile
+
+- name: Create the caddy persistent data directory
+  become: true
+  ansible.builtin.file:
+    path: "{{ docker_dir }}/caddy/caddy_data"
+    state: directory
+
+- name: Create the caddy persistent config directory
+  become: true
+  ansible.builtin.file:
+    path: "{{ docker_dir }}/caddy/caddy_config"
+    state: directory
+
+- name: Create the caddy persistent site directory
+  become: true
+  ansible.builtin.file:
+    path: "{{ docker_dir }}/caddy/site"
+    state: directory
+
+- name: Docker-compose up
+  become: true
+  ansible.builtin.command: "docker compose -f {{ docker_compose_dir }}/compose.caddy.yaml up --detach"
+  when: compose_file.changed or caddyfile.changed

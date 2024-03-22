@@ -1,0 +1,27 @@
+nas.home, nas {
+    tls internal
+    reverse_proxy http://nas.home:7575
+}
+
+squeezeboxserver.home, squeezeboxserver, music.home, music {
+    tls internal
+    reverse_proxy http://nas.home:9000
+}
+
+cockpit.home, cockpit {
+    tls internal
+    reverse_proxy http://nas.home:9091
+}
+
+portainer.home, portainer {
+    tls internal
+    reverse_proxy http://nas.home:9100
+}
+
+ha.home, ha {
+    tls internal
+    reverse_proxy /* {
+        to http://homeassistant.home:8123
+    }
+}
+

@@ -1,0 +1,29 @@
+- name: Copy the compose file
+  become: true
+  template:
+    src: templates/compose.yaml
+    dest: "{{ docker_compose_dir }}/compose.homarr.yaml"
+  register: compose_file
+
+- name: Create the homarr persistent data directory
+  become: true
+  ansible.builtin.file:
+    path: "{{ docker_dir }}/homarr/data"
+    state: directory
+
+- name: Create the homarr persistent configs directory
+  become: true
+  ansible.builtin.file:
+    path: "{{ docker_dir }}/homarr/configs"
+    state: directory
+
+- name: Create the homarr persistent icons directory
+  become: true
+  ansible.builtin.file:
+    path: "{{ docker_dir }}/homarr/icons"
+    state: directory
+
+- name: Docker-compose up
+  become: true
+  ansible.builtin.command: "docker compose -f {{ docker_compose_dir }}/compose.homarr.yaml up --detach"
+  when: compose_file.changed

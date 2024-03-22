@@ -1,15 +1,23 @@
 
+- name: check whether 45 drives repo has been downloaded already
+  become: true
+  stat:
+    path: /tmp/setup
+  register: fortyfive_drive
+
 - name: Download 45 drives repo setup script
   get_url: 
     url: https://repo.45drives.com/setup 
     dest: /tmp/setup
     mode: 755
+  when: not fortyfive_drive.stat.exists
 
 - name: Setup 45drives repo
   expect:
     command: /tmp/setup
     responses:
       "Would you like to use 'focal' packages" : 'y'
+  when: not fortyfive_drive.stat.exists
 
 - name: Install cockpit filesharing
   apt: 
@@ -51,10 +59,17 @@
     dest: /etc/systemd/system/cockpit.socket.d/listen.conf
   register: conf_file
 
+- name: allow access from reverse proxy
+  become: true
+  template:
+    src: templates/cockpit.conf
+    dest: /etc/cockpit/cockpit.conf
+  register: cockpit_conf_file
+
 - name: restart cockpit
   become: true
   ansible.builtin.systemd_service:
     daemon_reload: true
     name: cockpit.socket
     state: restarted
-  when: conf_file.changed
+  when: conf_file.changed or cockpit_conf_file.changed

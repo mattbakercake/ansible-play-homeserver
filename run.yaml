@@ -23,6 +23,10 @@
       loop_control:
         loop_var: current_role
 
+    - name: portainer
+      ansible.builtin.include_role:
+        name: portainer
+
     - name: samba
       ansible.builtin.include_role:
         name: geerlingguy.samba
@@ -38,3 +42,11 @@
     - name: Logitech Media Server (LMS)
       ansible.builtin.include_role: 
         name: logitechmediaserver
+
+    - name: Caddy Server
+      ansible.builtin.include_role: 
+        name: caddy
+
+    - name: Homarr homepage
+      ansible.builtin.include_role: 
+        name: homarr
