@@ -3,6 +3,11 @@ nas.home, nas {
     reverse_proxy http://nas.home:7575
 }
 
+nas_dashdot.home, nas_dashdot {
+    tls internal
+    reverse_proxy http://nas.home:3001
+}
+
 squeezeboxserver.home, squeezeboxserver, music.home, music {
     tls internal
     reverse_proxy http://nas.home:9000
@@ -22,6 +27,13 @@ ha.home, ha {
     tls internal
     reverse_proxy /* {
         to http://homeassistant.home:8123
+    }
+}
+
+phole.home, phole {
+    tls internal
+    reverse_proxy /* {
+        to http://pi.hole
     }
 }
 

@@ -50,3 +50,7 @@
     - name: Homarr homepage
       ansible.builtin.include_role: 
         name: homarr
+
+    - name: Dashdot resource metrics
+      ansible.builtin.include_role: 
+        name: dashdot

@@ -1,0 +1,12 @@
+- name: Copy the compose file
+  become: true
+  template:
+    src: templates/compose.yaml
+    dest: "{{ docker_compose_dir }}/compose.dashdot.yaml"
+  register: compose_file
+
+
+- name: Docker-compose up
+  become: true
+  ansible.builtin.command: "docker compose -f {{ docker_compose_dir }}/compose.homarr.yaml -f {{ docker_compose_dir }}/compose.dashdot.yaml up --detach"
+  when: compose_file.changed
