@@ -1,39 +1,52 @@
-nas.home, nas {
-    tls internal
+dash.{$MY_DOMAIN} {
+    tls {
+        dns cloudflare {env.CLOUDFLARE_API_TOKEN}
+    }
     reverse_proxy http://nas.home:7575
 }
 
-nas_dashdot.home, nas_dashdot {
-    tls internal
-    reverse_proxy http://nas.home:3001
+nas-dashdot.{$MY_DOMAIN} {
+    tls {
+        dns cloudflare {env.CLOUDFLARE_API_TOKEN}
+    }
+    reverse_proxy http://nas.home:3002
 }
 
-squeezeboxserver.home, squeezeboxserver, music.home, music {
-    tls internal
+squeezeboxserver.{$MY_DOMAIN}, music.{$MY_DOMAIN} {
+    tls {
+        dns cloudflare {env.CLOUDFLARE_API_TOKEN}
+    }
     reverse_proxy http://nas.home:9000
 }
 
-cockpit.home, cockpit {
-    tls internal
+cockpit.{$MY_DOMAIN} {
+    tls {
+        dns cloudflare {env.CLOUDFLARE_API_TOKEN}
+    }
     reverse_proxy http://nas.home:9091
 }
 
-portainer.home, portainer {
-    tls internal
+portainer.{$MY_DOMAIN} {
+    tls {
+        dns cloudflare {env.CLOUDFLARE_API_TOKEN}
+    }
     reverse_proxy http://nas.home:9100
 }
 
-ha.home, ha {
-    tls internal
+ha.{$MY_DOMAIN} {
+    tls {
+        dns cloudflare {env.CLOUDFLARE_API_TOKEN}
+    }
     reverse_proxy /* {
         to http://homeassistant.home:8123
     }
 }
 
-phole.home, phole {
-    tls internal
+phole.{$MY_DOMAIN} {
+    tls {
+        dns cloudflare {env.CLOUDFLARE_API_TOKEN}
+    }
     reverse_proxy /* {
         to http://pi.hole
     }
 }
-

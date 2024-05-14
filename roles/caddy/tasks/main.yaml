@@ -12,6 +12,25 @@
     dest: "{{ docker_dir }}/caddy/Caddyfile"
   register: caddyfile
 
+- name: Create dockerfile-dns directory
+  become: true
+  ansible.builtin.file:
+    path: "{{ docker_dir }}/caddy/dockerfile-dns"
+    state: directory
+
+- name: Copy the Dockerfile
+  become: true
+  template:
+    src: templates/Dockerfile
+    dest: "{{ docker_dir }}/caddy/dockerfile-dns/Dockerfile"
+  register: dockerfile
+
+- name: Copy the container-vars.env file
+  become: true
+  template:
+    src: templates/container-vars.env
+    dest: "{{ docker_dir }}/caddy/container-vars.env"
+
 - name: Create the caddy persistent data directory
   become: true
   ansible.builtin.file:
@@ -32,5 +51,5 @@
 
 - name: Docker-compose up
   become: true
-  ansible.builtin.command: "docker compose -f {{ docker_compose_dir }}/compose.caddy.yaml up --detach"
+  ansible.builtin.command: "docker compose -f {{ docker_compose_dir }}/compose.caddy.yaml up --detach --force-recreate"
   when: compose_file.changed or caddyfile.changed

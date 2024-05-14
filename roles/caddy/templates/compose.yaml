@@ -1,6 +1,8 @@
 services:
   caddy:
-    image: caddy:latest
+    build: "{{ docker_dir }}/caddy/dockerfile-dns"
+    hostname: caddy
+    container_name: caddy
     restart: unless-stopped
     ports:
       - "80:80"
@@ -11,6 +13,8 @@ services:
       - "{{ docker_dir }}/caddy/site:/srv"
       - "{{ docker_dir }}/caddy/caddy_data:/data"
       - "{{ docker_dir }}/caddy/caddy_config:/config"
+    env_file:
+      - "{{ docker_dir }}/caddy/container-vars.env"
 
 volumes:
   caddy_data:

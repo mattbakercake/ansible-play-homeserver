@@ -3,10 +3,12 @@ version: '3'
 services:
   homarr:
     container_name: homarr
+    hostname: homarr
     image: ghcr.io/ajnart/homarr:latest
     restart: unless-stopped
     ports:
       - "7575:7575"
+      - "3001:3002"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock # Optional, only if you want docker integration
       - "{{ docker_dir }}/homarr/configs:/app/data/configs"
