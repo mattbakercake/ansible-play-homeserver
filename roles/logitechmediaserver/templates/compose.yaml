@@ -16,4 +16,5 @@ services:
 
     environment:
       - HTTP_PORT=9000
+      - TZ=Europe/London
     restart: unless-stopped
