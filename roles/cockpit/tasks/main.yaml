@@ -17,6 +17,7 @@
     command: /tmp/setup
     responses:
       "Would you like to use 'focal' packages" : 'y'
+      "Do you want to accept these changes and continue updating from this repository? [y/N]": 'y'
   when: not fortyfive_drive.stat.exists
 
 - name: Install cockpit filesharing

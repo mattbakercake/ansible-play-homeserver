@@ -1,3 +1,17 @@
+router.{$MY_DOMAIN} {
+    tls {
+        dns cloudflare {env.CLOUDFLARE_API_TOKEN}
+    }
+    reverse_proxy http://router.home
+}
+
+modem.{$MY_DOMAIN} {
+    tls {
+        dns cloudflare {env.CLOUDFLARE_API_TOKEN}
+    }
+    reverse_proxy http://modem.home
+}
+
 dash.{$MY_DOMAIN} {
     tls {
         dns cloudflare {env.CLOUDFLARE_API_TOKEN}
@@ -48,5 +62,23 @@ phole.{$MY_DOMAIN} {
     }
     reverse_proxy /* {
         to http://pi.hole
+    }
+}
+
+nodered.{$MY_DOMAIN} {
+    tls {
+        dns cloudflare {env.CLOUDFLARE_API_TOKEN}
+    }
+    reverse_proxy /* {
+        to http://homeassistant.home:1880
+    }
+}
+
+grafana.{$MY_DOMAIN} {
+    tls {
+        dns cloudflare {env.CLOUDFLARE_API_TOKEN}
+    }
+    reverse_proxy /* {
+        to http://grafana.home:3030
     }
 }
